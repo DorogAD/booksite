@@ -3,4 +3,4 @@ from django.shortcuts import render
 
 
 def index(request):
-    return HttpResponse('<h1>hello hell</h1>')
+    return render(request, 'free_books/index.html')
