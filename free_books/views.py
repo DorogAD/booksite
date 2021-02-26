@@ -5,19 +5,11 @@ from django.views.generic import ListView, DetailView
 from .models import Book, Genre
 
 
-def index(request):
-    return render(request, 'free_books/index.html')
-
-
-# def get_genre(request, genre_slug):
-#     return render(request, 'free_books/genre.html')
-
-
 class Home(ListView):
     model = Book
     template_name = 'free_books/index.html'
     context_object_name = 'books'  # объект в шаблоне который будет заполняться данными
-    paginate_by = 2
+    paginate_by = 1
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -30,10 +22,10 @@ class GetBook(DetailView):
     template_name = 'free_books/single.html'
     context_object_name = 'book'  # здесь мы вручную задаем имя переменной контекста для лучшей читабельности
 
-    def get_context_data(self, *, object_list=None, **kwargs):
+    def get_context_data(self, *, object_list=None, **kwargs):  # нужен для увеличения количества просмотров
         context = super().get_context_data(**kwargs)
-        self.object.views = F('book_views') + 1  # класс Ф нужен для обновления количества просмотров.
-        # мы обращаемся к атрибуту вьюс объекта бук и добавляем к имеющемуся там значению еще один просмотр
+        self.object.book_views = F('book_views') + 1  # класс Ф нужен для обновления количества просмотров.
+    #     мы обращаемся к атрибуту вьюс объекта бук и добавляем к имеющемуся там значению еще один просмотр
         self.object.save()  # метод сэйв сохраняет количество просмотров
         self.object.refresh_from_db()  # перезапрашиваем данные из базы данных после сохранения
         return context
